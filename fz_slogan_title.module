@@ -1,0 +1,56 @@
+<?php
+require 'fz_slogan_title_admin.inc';
+
+/**
+ * Implements hook_title_preprocess_page().
+ */
+function fz_slogan_title_preprocess_page(&$vars) {
+  $version = variable_get('fz_slogan_title_scycle', 'random');
+  $list = array();
+  $dlist = explode("\n", variable_get('fz_slogan_title_slist', ''));
+  foreach ($dlist as $item) {
+    if (trim($item) != '') {
+      $col = explode("|",t($item));
+      $list[] = $col[0];
+      if($version == "weight"){
+        if( isset($col[1]) && ( $col[1] > 1 ) ){
+          for($i=1; $i < $col[1] ; $i++){
+            $list[] = $col[0];
+          }
+        }
+      }
+    }
+  } 
+  if (empty($list)) {
+    return;
+  }
+      
+  switch ($version ) {
+    case 'random':
+    case 'weight':
+      $index = array_rand($list);
+      break;
+    case 'cycling':
+      $index = variable_get('fz_slogan_title_sindex', 0);
+      ++$index;
+      if ($index >= count($list)) {
+        $index = 0;
+      }
+      break;
+  }
+  variable_set('fz_slogan_title_slogan_index', $index);
+  $text = $list[$index]; 
+
+  if(variable_get("fz_slogan_change","")) {
+    variable_set("fz_slogan", $text);
+  }
+  if(variable_get("fz_slogan_slogan")){
+    $vars['site_slogan']    = filter_xss($text);
+  }else{
+    $vars['site_slogan']    = '';
+  }
+  if(variable_get("fz_slogan_title")){
+    $vars['head_title']['title'] = filter_xss($text);
+  }  
+}
+

@@ -1,0 +1,11 @@
+name = FZ Slogan Title
+description = "Slogan and Title change random or cycling"
+core = 7.x
+package = FZ
+project = fz_slogan_title
+configure = admin/config/fz/fz_slogan_title
+
+; Information added by drupal.org packaging script on 2015-12-24
+version = "7.x-1.2"
+
+datestamp = "1587121031"
